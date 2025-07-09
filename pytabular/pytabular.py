@@ -5,14 +5,20 @@ Main class is `Tabular()`. Use that for connecting with your models.
 
 import logging
 
-from Microsoft.AnalysisServices.Tabular import (
-    Server,
-    ColumnType,
-    Table,
-    DataColumn,
-    Partition,
-    MPartitionSource,
-)
+# Import .NET assemblies after CLR is configured
+# These imports are moved inside functions to ensure CLR is ready
+def _import_analysis_services():
+    """Import Analysis Services classes after CLR configuration."""
+    global Server, ColumnType, Table, DataColumn, Partition, MPartitionSource
+    from Microsoft.AnalysisServices.Tabular import (
+        Server,
+        ColumnType,
+        Table,
+        DataColumn,
+        Partition,
+        MPartitionSource,
+    )
+    return Server, ColumnType, Table, DataColumn, Partition, MPartitionSource
 
 from typing import List, Union
 from collections import namedtuple
@@ -63,6 +69,9 @@ class Tabular(PyObject):
 
     def __init__(self, connection_str: str):
         """Connect to model. Just supply a solid connection string."""
+        # Import Analysis Services classes now that CLR is configured
+        _import_analysis_services()
+        
         # Connecting to model...
         logger.debug("Initializing Tabular Class")
         self.Server = Server()

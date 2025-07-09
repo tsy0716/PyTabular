@@ -4,6 +4,7 @@ Does 1 actually equal 1?
 Or am I crazy person about to descend into madness.
 """
 
+import pytabular as p
 from Microsoft.AnalysisServices.Tabular import Database
 
 

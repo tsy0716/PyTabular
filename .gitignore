@@ -104,6 +104,11 @@ ipython_config.py
 #   https://pdm.fming.dev/#use-with-ide
 .pdm.toml
 
+# uv
+#   uv.lock should be committed to version control for reproducible builds
+#   but .uv/ cache directory should be ignored
+.uv/
+
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
 __pypackages__/
 
@@ -184,3 +189,34 @@ docs/_config.yml# Byte-compiled / optimized / DLL files
 test-notebook.ipynb
 test.py
 testing.py
+
+# Development tools and temp files
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+*.pyc
+*.pyo
+*.pyd
+*.so
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ADOMO Linux migration script files
+dll_backup/
+update_adomo.log
+*.nupkg
+/temp_adomo_update/dll_cleanup_summary.md

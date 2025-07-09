@@ -22,8 +22,9 @@ import os
 from typing import Union
 from pytabular.logic_utils import get_value_to_df
 import pandas as pd
-from Microsoft.AnalysisServices.AdomdClient import AdomdCommand, AdomdConnection
 
+# Import .NET assemblies - CLR is configured in __init__.py before this module loads
+from Microsoft.AnalysisServices.AdomdClient import AdomdCommand, AdomdConnection
 
 logger = logging.getLogger("PyTabular")
 

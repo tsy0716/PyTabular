@@ -1,0 +1,4 @@
+---
+alwaysApply: true
+---
+Use uv run for run .py, this project use uv.

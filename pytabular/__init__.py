@@ -42,15 +42,56 @@ dll = os.path.join(os.path.dirname(__file__), "dll")
 sys.path.append(dll)
 sys.path.append(os.path.dirname(__file__))
 
+logger.info("Configuring pythonnet for cross-platform .NET...")
+
+# Try to configure pythonnet for coreclr before any CLR operations
+clr_imported = False
+try:
+    import pythonnet
+    from pythonnet import set_runtime
+    
+    # Try to configure runtime first
+    try:
+        set_runtime("coreclr")
+        logger.info("✅ pythonnet configured for coreclr (.NET 8.0)")
+    except Exception as runtime_error:
+        if "already been loaded" in str(runtime_error):
+            logger.info("✅ .NET runtime already configured in this process")
+        else:
+            logger.warning(f"⚠️  Runtime configuration failed: {runtime_error}")
+    
+    # Now import CLR
+    import clr
+    clr_imported = True
+    logger.info("✅ CLR imported successfully")
+    
+except Exception as e:
+    logger.error(f"❌ Failed to import pythonnet/CLR: {e}")
+    raise
+
 logger.info("Beginning CLR references...")
-import clr
+
+logger.info("Adding DLL references for cross-platform .NET 8.0...")
+
+# Load DLLs in dependency order
+dll_dir = os.path.join(os.path.dirname(__file__), "dll")
+
+logger.info("Adding Reference Microsoft.AnalysisServices.Runtime.Core")
+clr.AddReference(os.path.join(dll_dir, "Microsoft.AnalysisServices.Runtime.Core.dll"))
+
+logger.info("Adding Reference Microsoft.AnalysisServices.Core")
+clr.AddReference(os.path.join(dll_dir, "Microsoft.AnalysisServices.Core.dll"))
+
+logger.info("Adding Reference Microsoft.AnalysisServices")
+clr.AddReference(os.path.join(dll_dir, "Microsoft.AnalysisServices.dll"))
+
+logger.info("Adding Reference Microsoft.AnalysisServices.Tabular")
+clr.AddReference(os.path.join(dll_dir, "Microsoft.AnalysisServices.Tabular.dll"))
 
 logger.info("Adding Reference Microsoft.AnalysisServices.AdomdClient")
-clr.AddReference("Microsoft.AnalysisServices.AdomdClient")
-logger.info("Adding Reference Microsoft.AnalysisServices.Tabular")
-clr.AddReference("Microsoft.AnalysisServices.Tabular")
-logger.info("Adding Reference Microsoft.AnalysisServices")
-clr.AddReference("Microsoft.AnalysisServices")
+clr.AddReference(os.path.join(dll_dir, "Microsoft.AnalysisServices.AdomdClient.dll"))
+
+logger.info("✅ All cross-platform DLLs loaded successfully")
 
 logger.info("Importing specifics in module...")
 from .pytabular import Tabular
